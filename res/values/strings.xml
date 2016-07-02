@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Gasstation-phone</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_forgetpwd">ForgetpwdActivity</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="hintphone">请输入手机号码</string>
+    <string name="hintpwd">请输入密码</string>
+    <string name="hintpwdagain">请再次输入密码</string>
+    <string name="agreement">用户使用协议</string>
+    <string name="forgetpwd">忘记密码</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="clikeregister">点击注册</string>
+    <string name="identifying_code">请输入验证码</string>
+    <string name="get_code">点击获取验证码</string>
+    <string name="username">请输入昵称</string>
+    <string name="confirm">确定</string>
+    <string name="setpwd">重置密码</string>
+    <string name="title_activity_baidu_location">BaiduLocationActivity</string>
+    <string name="title_activity_main_inter_face">MainInterFaceActivity</string>
+    <string name="limit">限行：</string>
+    <string name="pm_">PM:</string>
+    <string name="wear">穿衣：</string>
+    <string name="stationName">默认的加油站名字</string>
+    <string name="m">2m</string>
+    <string name="license">车牌号</string>
+    <string name="oilgun">油枪号</string>
+    <string name="_5">5号</string>
+    <string name="money_style">金额（元）</string>
+    <string name="pay_style">支付方式</string>
+    <string name="add_oil">加油</string>
+    <string name="notice">是否开票</string>
+    <string name="bill_info">开票信息</string>
+    <string name="real_pay">实付:</string>
+    <string name="submit">提交</string>
+    <string name="title_activity_baidu_map">BaiduMapActivity</string>
+    <string name="guide">导航</string>
+    <string name="select_oil_type">请选择你要加的油品</string>
+    <string name="_95_">95#</string>
+    <string name="_92_">92#</string>
+    <string name="chaiyou">柴油</string>
+    <string name="title_activity_alert">AlertActivity</string>
+    <string name="cancel">取消</string>
+    <string name="defult_type">支付宝</string>
+    <string name="title_activity_navi">NaviActivity</string>
+    <string name="logout">注销</string>
+    <string name="xian">西安</string>
+    <string name="date">2016/6/17 星期五</string>
+    <string name="_36_">36℃</string>
+    <string name="good">晴</string>
+    <string name="_">良</string>
+    <string name="confirm_logout">确认注销</string>
+    <string name="_18829282408">18829282408</string>
+    <string name="qq_123456">qq.123456</string>
+    <string name="title_activity_catch_station">CatchStationActivity</string>
+    <string name="preference_default_tts_role">xiaoyan</string>
+    <string name="preference_key_tts_volume">tts_volume</string>
+    <string name="preference_key_tts_pitch">tts_pitch</string>
+    <string name="preference_key_tts_speed">tts_speed</string>
+    <string name="app_id">5774bb66</string>
+
+</resources>

@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/bmapView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:clickable="true" >
+    </com.baidu.mapapi.map.MapView>
+
+    <ListView
+        android:id="@+id/listview_gasstation"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:cacheColorHint="@android:color/transparent"
+        android:choiceMode="singleChoice"
+        android:divider="@color/gray"
+        android:dividerHeight="1dp"
+        android:fastScrollEnabled="false"
+        android:listSelector="@color/deep_gray"
+        android:scrollbars="@null" >
+    </ListView>
+
+    <Button
+        android:id="@+id/btn_catch_station"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listview_gasstation"
+        android:layout_alignParentRight="true"
+        android:background="#00000000"
+        android:drawableBottom="@drawable/navi_idle_gps_unlocked"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+</RelativeLayout>

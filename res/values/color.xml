@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="title">#207EDA</color>
+    <color name="textcolor">#E0FFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#22B286</color>
+    <color name="blue">#0000FF</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gray">#a1a3a8</color>
+    <color name="item_text_color">#212543</color>
+    
+    <color name="daohang_anxia">#15112a</color>
+        
+    <color name="daohang">#212543</color>
+    
+    <color name="deep_gray">#d4d6dc</color>
+
+</resources>

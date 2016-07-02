@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/oil_pop_right" android:state_pressed="false"></item>
+    <item android:drawable="@drawable/oil_pop1_right" android:state_pressed="true"></item>
+</selector>
