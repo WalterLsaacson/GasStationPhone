@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -36,9 +37,10 @@ public class MyPayActivity extends Activity implements OnClickListener {
 	private TextView tv_stationDistance;
 	private ImageView iv_money;
 	private ImageView iv_pay_type;
+	private ImageView iv_back1;
 	private TextView tv_money;
 	private TextView tv_type;
-	private TextView tv_add_oil;
+	private TextView tv_pay;
 	private TextView tv_pay_money;
 	private ImageView iv_type;
 	// pop window
@@ -59,6 +61,8 @@ public class MyPayActivity extends Activity implements OnClickListener {
 
 	private MyApplication app;
 	private StationInfo station;
+	// 记录订单信息
+	private String curMoney;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +93,7 @@ public class MyPayActivity extends Activity implements OnClickListener {
 		pay_type = new ArrayList<String>();
 		pay_type.add("支付宝");
 		pay_type.add("微信");
+
 	}
 
 	private void initView() {
@@ -113,8 +118,9 @@ public class MyPayActivity extends Activity implements OnClickListener {
 		tv_type = (TextView) findViewById(R.id.tvType);
 		tv_pay_money = (TextView) findViewById(R.id.tvPayMoney);
 
-		tv_add_oil = (TextView) findViewById(R.id.tvAddOil);
-		tv_add_oil.setOnClickListener(this);
+		tv_pay = (TextView) findViewById(R.id.tv_pay);
+		tv_pay.setOnClickListener(this);
+		curMoney = tv_money.getText().toString();
 
 		layout = LayoutInflater.from(context).inflate(
 				R.layout.pop_window_oilgun, null);
@@ -125,6 +131,9 @@ public class MyPayActivity extends Activity implements OnClickListener {
 
 		tv_cancel = (TextView) layout.findViewById(R.id.tv_cancel);
 		tv_cancel.setOnClickListener(this);
+
+		iv_back1 = (ImageView) findViewById(R.id.back1);
+		iv_back1.setOnClickListener(this);
 
 	}
 
@@ -141,6 +150,7 @@ public class MyPayActivity extends Activity implements OnClickListener {
 						int position, long id) {
 					tv_money.setText(money.get(position));
 					tv_pay_money.setText("实付：" + money.get(position) + "元");
+					curMoney = tv_money.getText().toString();
 					popWindow.dismiss();
 				}
 			});
@@ -165,9 +175,12 @@ public class MyPayActivity extends Activity implements OnClickListener {
 			});
 			MyPop();
 			break;
-		case R.id.tvAddOil:
-			Const.showToast(context, "获取到的内容：" + tv_type.getText().toString());
+		case R.id.tv_pay:
+			Const.showToast(context, "支付方式：" + tv_type.getText().toString());
 			if (tv_type.getText().toString().equals("支付宝")) {
+				Editor editor = app.sp.edit();
+				editor.putString("money", curMoney);
+				editor.commit();
 				intent = new Intent(context, PayActivity.class);
 				startActivity(intent);
 			} else {
@@ -179,7 +192,9 @@ public class MyPayActivity extends Activity implements OnClickListener {
 		case R.id.tv_cancel:
 			popWindow.dismiss();
 			break;
-
+		case R.id.back1:
+			finish();
+			break;
 		default:
 			break;
 		}

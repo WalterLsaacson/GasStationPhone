@@ -1,4 +1,6 @@
 package com.guanyin.alipay;
+import com.alipay.sdk.app.PayTask;
+import com.alipay.sdk.util.H5PayResultModel;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,16 +18,10 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
-import com.alipay.sdk.app.PayTask;
-import com.alipay.sdk.util.H5PayResultModel;
-
 public class H5PayDemoActivity extends Activity {
 
-	// 接受一个bundle类型的值，通过intent接受，发送方也通过intent进行发送
-	// 然后打开这个intent中配置的uri网页
 	private WebView mWebView;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,8 +58,7 @@ public class H5PayDemoActivity extends Activity {
 		}
 		super.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		LinearLayout layout = new LinearLayout(getApplicationContext());
-		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
-				LayoutParams.MATCH_PARENT);
+		LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		layout.setOrientation(LinearLayout.VERTICAL);
 		setContentView(layout, params);
 
@@ -122,14 +117,13 @@ public class H5PayDemoActivity extends Activity {
 						System.out.println("payTask:::" + ex);
 						final H5PayResultModel result = task.h5Pay(ex, true);
 						if (!TextUtils.isEmpty(result.getReturnUrl())) {
-							H5PayDemoActivity.this
-									.runOnUiThread(new Runnable() {
-
-										@Override
-										public void run() {
-											view.loadUrl(result.getReturnUrl());
-										}
-									});
+							H5PayDemoActivity.this.runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									view.loadUrl(result.getReturnUrl());
+								}
+							});
 						}
 					}
 				}).start();

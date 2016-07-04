@@ -1,6 +1,8 @@
 package com.guanyin.userface;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import okhttp3.Call;
 
@@ -68,6 +70,9 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 	private ProgressDialog progressDialog;
 	public static ArrayList<StationInfo> stations;
 	public static ArrayList<Gas> gasList;
+	// 设置view0的界面
+	private TextView tv_city_name;
+	private TextView tv_cur_date;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +111,6 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 	}
 
 	private void initDatas() {
-
 		gasList = new ArrayList<Gas>();
 		stations = new ArrayList<StationInfo>();
 		fragments.add(view0);
@@ -136,7 +140,23 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 		rb_carb.setOnClickListener(this);
 		rb_photo.setOnClickListener(this);
 		rb_iphone.setOnClickListener(this);
+		// view0的界面
+		tv_city_name = (TextView) view0.findViewById(R.id.city_name_tv);
+		tv_city_name.setText(app.city);
 
+		tv_cur_date = (TextView) view0.findViewById(R.id.cur_time_tv);
+		tv_cur_date.setText(getCurDate());
+
+	}
+
+	private CharSequence getCurDate() {
+		String[] week = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+		Calendar cd = Calendar.getInstance();
+		cd.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+		cd.get(Calendar.YEAR);
+		return cd.get(Calendar.YEAR) + "/" + (cd.get(Calendar.MONTH) + 1) + "/"
+				+ cd.get(Calendar.DATE)
+				+ week[cd.get(Calendar.DAY_OF_WEEK) - 1];
 	}
 
 	@Override
@@ -216,7 +236,7 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 				.addParams("token", app.sp.getString("token", null)).build()
 				.execute(new StringCallback() {
 					@Override
-					public void onResponse(String response, int arg) {
+					public void onResponse(String response) {
 						JSONObject jsonresponse = null;
 						Const.log(TAG, response);
 						try {
@@ -225,112 +245,129 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-						try {
-							if (jsonresponse.getJSONObject("status")
-									.getString("succeed").equals("1")) {
-								Const.log(TAG, "获取到加油站信息！");
-								if (jsonresponse.getJSONObject("data")
-										.getString("list").equals("1")) {
-									stations.clear();
-									Const.log(TAG, "转向地图");
-									Const.showToast(context, "当前位置三百米之内没有加油站！");
-									JSONArray arrayStations = jsonresponse
-											.getJSONObject("data")
-											.getJSONArray("stations");
-									if (arrayStations != null
-											&& arrayStations.length() > 0) {
-										for (int i = 0; i < arrayStations
-												.length(); i++) {
-											StationInfo siInfo = new StationInfo();
-											JSONObject stationJson = new JSONObject();
-											stationJson = arrayStations
-													.getJSONObject(i);
-											siInfo.station_id = stationJson
-													.getString("station_id");
-											siInfo.station_name = stationJson
-													.getString("station_name");
-											siInfo.address = stationJson
-													.getString("address");
-											siInfo.latitude_num = stationJson
-													.getString("latitude_num");
-											siInfo.longitude_num = stationJson
-													.getString("longitude_num");
-											siInfo.is_cooperate = stationJson
-													.getString("is_cooperate");
-											stations.add(siInfo);
+						if (jsonresponse.has("status")) {
+
+							try {
+								if (jsonresponse.getJSONObject("status")
+										.getString("succeed").equals("1")) {
+									Const.log(TAG, "获取到加油站信息！");
+									if (jsonresponse.getJSONObject("data")
+											.getString("list").equals("0")) {
+										stations.clear();
+										Const.log(TAG, "转向地图");
+										Const.showToast(context,
+												"当前位置三百米之内没有加油站！");
+										JSONArray arrayStations = jsonresponse
+												.getJSONObject("data")
+												.getJSONArray("stations");
+										if (arrayStations != null
+												&& arrayStations.length() > 0) {
+											for (int i = 0; i < arrayStations
+													.length(); i++) {
+												StationInfo siInfo = new StationInfo();
+												JSONObject stationJson = new JSONObject();
+												stationJson = arrayStations
+														.getJSONObject(i);
+												siInfo.station_id = stationJson
+														.getString("station_id");
+												siInfo.station_name = stationJson
+														.getString("station_name");
+												siInfo.address = stationJson
+														.getString("address");
+												siInfo.latitude_num = stationJson
+														.getString("latitude_num");
+												siInfo.longitude_num = stationJson
+														.getString("longitude_num");
+												siInfo.is_cooperate = stationJson
+														.getString("is_cooperate");
+												stations.add(siInfo);
+											}
 										}
+
+										// 当前位置三百米之内没有加油站时转到地图，设置地图的相关事宜，然后可以导航过去
+										intent = new Intent(context,
+												BaiduMapActivity.class);
+										startActivity(intent);
+									} else {
+										stations.clear();
+										JSONObject stationsObject = jsonresponse
+												.getJSONObject("data")
+												.getJSONArray("stations")
+												.getJSONObject(1);
+										StationInfo siInfo = new StationInfo();
+										siInfo.station_id = stationsObject
+												.getString("station_id");
+										siInfo.station_name = stationsObject
+												.getString("station_name");
+										siInfo.address = stationsObject
+												.getString("address");
+										siInfo.latitude_num = stationsObject
+												.getString("latitude_num");
+										siInfo.longitude_num = stationsObject
+												.getString("longitude_num");
+										siInfo.is_cooperate = stationsObject
+												.getString("is_cooperate");
+										JSONArray gasArray = new JSONArray();
+										gasArray = stationsObject
+												.getJSONArray("gasprice");
+										if (gasArray != null
+												&& gasArray.length() > 0) {
+											gasList.clear();
+											for (int i = 0; i < gasArray
+													.length(); i++) {
+												JSONObject gasObject = gasArray
+														.getJSONObject(i);
+												Gas gas = new Gas();
+												gas.oil_price = gasObject
+														.getString("price");
+												if (i == 2) {
+													gas.gas_type = gasObject
+															.getString("gas_type");
+												} else {
+													gas.gas_type = gasObject
+															.getString("gas");
+												}
+												gasList.add(gas);
+											}
+										}
+										stations.add(siInfo);
+										Const.log(TAG, "跳转到支付");
+										intent = new Intent(context,
+												LicenseOilgunActivity.class);
+										startActivity(intent);
 									}
 
-									// 当前位置三百米之内没有加油站时转到地图，设置地图的相关事宜，然后可以导航过去
-									intent = new Intent(context,
-											BaiduMapActivity.class);
-									startActivity(intent);
 								} else {
-									stations.clear();
-									JSONObject stationsObject = jsonresponse
-											.getJSONObject("data")
-											.getJSONArray("stations")
-											.getJSONObject(0);
-									StationInfo siInfo = new StationInfo();
-									siInfo.station_id = stationsObject
-											.getString("station_id");
-									siInfo.station_name = stationsObject
-											.getString("station_name");
-									siInfo.address = stationsObject
-											.getString("address");
-									siInfo.latitude_num = stationsObject
-											.getString("latitude_num");
-									siInfo.longitude_num = stationsObject
-											.getString("longitude_num");
-									siInfo.is_cooperate = stationsObject
-											.getString("is_cooperate");
-									JSONArray gasArray = new JSONArray();
-									gasArray = stationsObject
-											.getJSONArray("gasprice");
-									if (gasArray != null
-											&& gasArray.length() > 0) {
-										for (int i = 0; i < gasArray.length(); i++) {
-											JSONObject gasObject = gasArray
-													.getJSONObject(i);
-											Gas gas = new Gas();
-											gas.oil_price = gasObject
-													.getString("price");
-											gasList.add(gas);
-										}
-									}
-									stations.add(siInfo);
-									Const.log(TAG, "跳转到支付");
+									Const.log(response, "获取失败！");
+								}
+								if (jsonresponse.getJSONObject("status")
+										.getString("error_code").equals("2002")) {
+									Const.showToast(context,
+											"该用户已在其他地方登录，请重新登录！");
 									intent = new Intent(context,
-											LicenseOilgunActivity.class);
+											LoginActivity.class);
 									startActivity(intent);
+									finish();
+								} else {
+									Const.showToast(context,
+											jsonresponse
+													.getJSONObject("status")
+													.getString("error_desc"));
 								}
 
-							} else {
-								Const.log(response, "获取失败！");
+								progressDialog.dismiss();
+							} catch (JSONException e) {
+								e.printStackTrace();
+								progressDialog.dismiss();
 							}
-							if (jsonresponse.getJSONObject("status")
-									.getString("error_code").equals("2002")) {
-								Const.showToast(context, "该用户已在其他地方登录，请重新登录！");
-								intent = new Intent(context,
-										LoginActivity.class);
-								startActivity(intent);
-								finish();
-							} else {
-								Const.showToast(context,
-										jsonresponse.getJSONObject("status")
-												.getString("error_desc"));
-							}
-
-							progressDialog.dismiss();
-						} catch (JSONException e) {
-							e.printStackTrace();
-							progressDialog.dismiss();
+						} else {
+							Const.showToast(context, "服务器异常请重试...");
 						}
 
 					}
 
 					@Override
-					public void onError(Call request, Exception e, int arg) {
+					public void onError(Call request, Exception e) {
 						Const.log(TAG, e.getMessage());
 					}
 				});

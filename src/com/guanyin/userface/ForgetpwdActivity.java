@@ -109,7 +109,7 @@ public class ForgetpwdActivity extends Activity implements OnClickListener {
 				.execute(new StringCallback() {
 
 					@Override
-					public void onResponse(String response, int arg2) {
+					public void onResponse(String response) {
 						Const.log(TAG, response);
 						// {"status":{"succeed":"1"},"data":{"member_id":"5","member_name":"testname2","real_name":"","sex":"0","birthday":"0000-00-00 00:00:00","email":"","area_code":"86","mobile":"18602951905","icon_name":"","icon_location":"","signature":"","id_number":"","region_id":"0","token":"956ddca9d19e92aba517ad952f0a6c02"}}
 						JSONObject jsonObject = null;
@@ -134,7 +134,7 @@ public class ForgetpwdActivity extends Activity implements OnClickListener {
 					}
 
 					@Override
-					public void onError(Call request, Exception e, int arg1) {
+					public void onError(Call request, Exception e) {
 						Const.log(TAG, e.getMessage());
 						dialog.dismiss();
 					}
@@ -167,7 +167,7 @@ public class ForgetpwdActivity extends Activity implements OnClickListener {
 				.execute(new StringCallback() {
 
 					@Override
-					public void onResponse(String response, int arg3) {
+					public void onResponse(String response) {
 						Const.log(TAG, response);
 						JSONObject jObject = null;
 
@@ -194,7 +194,7 @@ public class ForgetpwdActivity extends Activity implements OnClickListener {
 					}
 
 					@Override
-					public void onError(Call request, Exception e, int arg) {
+					public void onError(Call request, Exception e) {
 						Const.showToast(Context, e.getMessage());
 						dialog.dismiss();
 					}

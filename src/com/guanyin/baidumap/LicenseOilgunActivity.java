@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -33,15 +34,18 @@ public class LicenseOilgunActivity extends Activity implements
 	private ImageView iv_license_more;
 	private ImageView iv_oil_gun_more;
 	private TextView tv_stationName;
-	private TextView tv_stationDistance;
+	// private TextView tv_stationDistance;
 
 	private TextView tv_oilgun;
 	private TextView tv_license;
+	private TextView tv_type;
+	private ImageView iv_back;
 	// 辅助工具的声明
 	private Intent intent;
 	// 声明油枪和车牌号的数组
 	private ArrayList<String> oilGuns;
 	private ArrayList<String> licenses;
+	private ArrayList<String> types;
 	// 获取到pop window的布局和list view
 	private View layout;
 	private ListView listView;
@@ -52,7 +56,10 @@ public class LicenseOilgunActivity extends Activity implements
 	private TextView tv_cancel;
 	// 只有单个的加油站信息
 	private StationInfo station;
-	private double distance;
+
+	// 记录订单信息
+	private String oil_price;
+	private String oil_type;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +89,14 @@ public class LicenseOilgunActivity extends Activity implements
 		licenses.add("陕AIFFDI");
 		licenses.add("陕AFDBFD");
 		licenses.add("陕FSFDSI");
+
+		types = new ArrayList<String>();
+		for (int i = 0; i < ViewPagerActivity.gasList.size(); i++) {
+			if (ViewPagerActivity.gasList.get(i).gas_type.equals("92#")) {
+				oil_price = ViewPagerActivity.gasList.get(i).oil_price;
+			}
+			types.add(ViewPagerActivity.gasList.get(i).gas_type);
+		}
 	}
 
 	private void initView() {
@@ -100,9 +115,8 @@ public class LicenseOilgunActivity extends Activity implements
 		tv_stationName = (TextView) findViewById(R.id.tvStationName);
 		tv_stationName.setText(station.station_name);
 
-		distance = station.calculDistance();
-		tv_stationDistance = (TextView) findViewById(R.id.tvStationDistance);
-		tv_stationDistance.setText(distance + "m");
+		// tv_stationDistance = (TextView) findViewById(R.id.tvStationDistance);
+		// tv_stationDistance.setText(distance + "m");
 
 		tv_oilgun = (TextView) findViewById(R.id.tvBindOilgun);
 		tv_license = (TextView) findViewById(R.id.tvBindLicense);
@@ -117,19 +131,51 @@ public class LicenseOilgunActivity extends Activity implements
 		tv_cancel = (TextView) layout.findViewById(R.id.tv_cancel);
 		tv_cancel.setOnClickListener(this);
 
+		iv_back = (ImageView) findViewById(R.id.iv_back);
+		iv_back.setOnClickListener(this);
+
+		tv_type = (TextView) findViewById(R.id.tv_type);
+		tv_type.setOnClickListener(this);
+
+		oil_type = tv_type.getText().toString();
+
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tvAddOil:
+			Editor editor = app.sp.edit();
+			editor.putString("oil_type", oil_type);
+			editor.putString("oil_price", oil_price);
+			editor.commit();
 			intent = new Intent(this, MyPayActivity.class);
 			startActivity(intent);
+			break;
+		case R.id.iv_back:
+			finish();
+			break;
+		case R.id.tv_type:
+			// 先设置list view
+			myAdapter = new MyPayAdapter(context, types, "油品", true);
+			listView.setAdapter(myAdapter);
+			listView.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					tv_type.setText(types.get(position) + "#");
+					oil_type = tv_type.getText().toString();
+					oil_price = ViewPagerActivity.gasList.get(position).oil_price;
+					pop.dismiss();
+				}
+			});
+
+			MyPop();
 			break;
 		case R.id.iv_oil_gun_more:
 			// 先设置list view
 			myAdapter = new MyPayAdapter(context, oilGuns, "油枪号", true);
-			listView.setAdapter(myAdapter);
 			listView.setAdapter(myAdapter);
 			listView.setOnItemClickListener(new OnItemClickListener() {
 

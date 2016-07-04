@@ -40,8 +40,6 @@
     <string name="title_activity_baidu_map">BaiduMapActivity</string>
     <string name="guide">导航</string>
     <string name="select_oil_type">请选择你要加的油品</string>
-    <string name="_95_">95#</string>
-    <string name="_92_">92#</string>
     <string name="chaiyou">柴油</string>
     <string name="title_activity_alert">AlertActivity</string>
     <string name="cancel">取消</string>
@@ -62,5 +60,13 @@
     <string name="preference_key_tts_pitch">tts_pitch</string>
     <string name="preference_key_tts_speed">tts_speed</string>
     <string name="app_id">5774bb66</string>
+    <string name="addoil">现场加油</string>
+    <string name="_a132179">陕A132179</string>
+    <string name="_100">100</string>
+    <string name="_92">92#</string>
+    <string name="_95">95</string>
+    <string name="pay">支付</string>
+    <string name="webpay">网页支付转native</string>
+    <string name="defultproduct">测试的商品</string>
 
 </resources>

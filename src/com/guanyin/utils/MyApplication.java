@@ -22,6 +22,7 @@ public class MyApplication extends Application {
 	public double latitude = 0;
 	public double lontitude;
 	public float radius;
+	public String address;
 	public String city;
 
 	// 定位
@@ -95,14 +96,15 @@ public class MyApplication extends Application {
 			sb.append("\nlatitude : ");
 			latitude = location.getLatitude();
 			sb.append(location.getLatitude());
+			city = location.getCity();
 
 			sb.append("\nlontitude : ");
 			lontitude = location.getLongitude();
 			sb.append(location.getLongitude());
 
-			sb.append("\ncity : ");
-			city = location.getCity();
-			sb.append(location.getCity());
+			sb.append("\naddress : ");
+			address = location.getAddrStr();
+			sb.append(location.getAddrStr());
 
 			if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 网络定位结果
 				sb.append("\naddr : ");

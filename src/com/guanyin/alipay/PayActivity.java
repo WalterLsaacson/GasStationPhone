@@ -18,10 +18,12 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.guanyin.activity.R;
+import com.guanyin.utils.MyApplication;
 
 public class PayActivity extends FragmentActivity {
 
@@ -35,6 +37,12 @@ public class PayActivity extends FragmentActivity {
 	public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB";
 	private static final int SDK_PAY_FLAG = 1;
 
+	// 支付信息
+	private TextView tv_name;
+	private TextView tv_price;
+	private String oilType;
+	private String money;
+	private MyApplication app;
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		@SuppressWarnings("unused")
@@ -80,8 +88,18 @@ public class PayActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// 在这里使用静态的加载fragment的方法
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		if (app == null) {
+			app = MyApplication.getInstance();
+		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pay_main);
+
+		oilType = app.sp.getString("oil_type", null);
+		money = app.sp.getString("money", null);
+		tv_name = (TextView) findViewById(R.id.product_subject);
+		tv_price = (TextView) findViewById(R.id.product_price);
+		tv_name.setText(oilType);
+		tv_price.setText(money + "元");
 	}
 
 	/**
@@ -103,7 +121,11 @@ public class PayActivity extends FragmentActivity {
 							}).show();
 			return;
 		}
-		String orderInfo = getOrderInfo("测试的商品", "该测试商品的详细描述", "0.01");
+		// String orderInfo = getOrderInfo(app.sp.getString("oil_type", null),
+		// "价格：" + app.sp.getString("oil_price", null),
+		// app.sp.getString("money", null));
+
+		String orderInfo = getOrderInfo("油品：" + oilType, "该商品的详细描述", money);
 
 		/**
 		 * 特别注意，这里的签名逻辑需要放在服务端，切勿将私钥泄露在代码中！
@@ -168,7 +190,7 @@ public class PayActivity extends FragmentActivity {
 		 * demo中拦截url进行支付的逻辑是在H5PayDemoActivity中shouldOverrideUrlLoading方法实现，
 		 * 商户可以根据自己的需求来实现
 		 */
-		String url = "https://www.alipay.com/";
+		String url = "http://m.taobao.com";
 		// url可以是一号店或者淘宝等第三方的购物wap站点，在该网站的支付过程中，支付宝sdk完成拦截支付
 		extras.putString("url", url);
 		intent.putExtras(extras);

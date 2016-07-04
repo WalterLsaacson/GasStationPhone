@@ -4,7 +4,6 @@ import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 
-//这个类和base64类共同进行签名
 public class SignUtils {
 
 	private static final String ALGORITHM = "RSA";

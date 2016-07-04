@@ -56,7 +56,7 @@
             android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:background="@drawable/selector_item"
-            android:text="@string/_92_"
+            android:text="@string/_92"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selector_item"
-            android:text="@string/_95_"
+            android:text="@string/_95"
             android:textColor="@color/black"
             android:textSize="18sp" />
     </LinearLayout>

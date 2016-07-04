@@ -137,7 +137,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				.execute(new StringCallback() {
 
 					@Override
-					public void onResponse(String response, int arg) {
+					public void onResponse(String response) {
 						Const.log(TAG, response);
 						JSONObject jObject = null;
 						try {
@@ -177,7 +177,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 					}
 
 					@Override
-					public void onError(Call reuqest, Exception e, int arg) {
+					public void onError(Call reuqest, Exception e) {
 						Const.showToast(Context, e.getMessage());
 						dialog.dismiss();
 					}

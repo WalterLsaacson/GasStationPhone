@@ -10,11 +10,13 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#a1a3a8</color>
     <color name="item_text_color">#212543</color>
-    
     <color name="daohang_anxia">#15112a</color>
-        
     <color name="daohang">#212543</color>
-    
     <color name="deep_gray">#d4d6dc</color>
+    <color name="top">#373A55</color>
+    <color name="name">#C8CDD2</color>
+    <color name="add">#4B4D66</color>
+    <color name="cancel">#34364F</color>
+    <color name="pay">#01AAEE</color>
 
 </resources>
