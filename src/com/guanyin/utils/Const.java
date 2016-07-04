@@ -6,6 +6,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,6 +28,8 @@ public class Const {
 	public static final String apiRouteValidate = "member/member/validateMemberName";
 	public static final String apiRouteReset = "member/member/resetPassword";
 	public static final String apiGetStation = "station/station/getstation";
+
+	private static double EARTH_RADIUS = 6378137.0;
 
 	public static final void showToast(Context context, String contents) {
 		if (debug) {
@@ -110,4 +115,35 @@ public class Const {
 			return false;
 		}
 	}
+
+	public static double calculDistance(String latitude_num,
+			String longitude_num) {
+		// 计算p1、p2两点之间的直线距离，单位：米
+		LatLng p1 = new LatLng(MyApplication.getInstance().latitude,
+				MyApplication.getInstance().lontitude);
+		LatLng p2 = new LatLng(Double.parseDouble(latitude_num),
+				Double.parseDouble(longitude_num));
+
+		return DistanceUtil.getDistance(p1, p2);
+
+	}
+
+	private static double rad(double d) {
+		return d * Math.PI / 180.0;
+	}
+
+	public static double GetDistance(double lat1, double lng1, double lat2,
+			double lng2) {
+		double radLat1 = rad(lat1);
+		double radLat2 = rad(lat2);
+		double a = radLat1 - radLat2;
+		double b = rad(lng1) - rad(lng2);
+		double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+				+ Math.cos(radLat1) * Math.cos(radLat2)
+				* Math.pow(Math.sin(b / 2), 2)));
+		s = s * EARTH_RADIUS;
+		s = Math.round(s * 10000) / 10000;
+		return s;
+	}
+
 }

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.guanyin.activity.R;
 import com.guanyin.data.StationInfo;
 import com.guanyin.userface.ViewPagerActivity;
+import com.guanyin.utils.Const;
 import com.guanyin.utils.MyApplication;
 
 public class LicenseOilgunActivity extends Activity implements
@@ -34,7 +35,7 @@ public class LicenseOilgunActivity extends Activity implements
 	private ImageView iv_license_more;
 	private ImageView iv_oil_gun_more;
 	private TextView tv_stationName;
-	// private TextView tv_stationDistance;
+	private TextView tv_stationDistance;
 
 	private TextView tv_oilgun;
 	private TextView tv_license;
@@ -115,8 +116,11 @@ public class LicenseOilgunActivity extends Activity implements
 		tv_stationName = (TextView) findViewById(R.id.tvStationName);
 		tv_stationName.setText(station.station_name);
 
-		// tv_stationDistance = (TextView) findViewById(R.id.tvStationDistance);
-		// tv_stationDistance.setText(distance + "m");
+		tv_stationDistance = (TextView) findViewById(R.id.tvStationDistance);
+		Const.log("LicenseOilgunActivity", station.latitude_num + ""
+				+ station.longitude_num);
+		tv_stationDistance.setText(calculDistance(station.latitude_num,
+				station.longitude_num));
 
 		tv_oilgun = (TextView) findViewById(R.id.tvBindOilgun);
 		tv_license = (TextView) findViewById(R.id.tvBindLicense);
@@ -139,6 +143,13 @@ public class LicenseOilgunActivity extends Activity implements
 
 		oil_type = tv_type.getText().toString();
 
+	}
+
+	private String calculDistance(String lati, String lon) {
+		double latidouble = Double.parseDouble(lati);
+		double londouble = Double.parseDouble(lati);
+		return Const.GetDistance(app.latitude, app.lontitude, latidouble,
+				londouble) + "m";
 	}
 
 	@Override

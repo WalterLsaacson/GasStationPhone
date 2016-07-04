@@ -75,7 +75,6 @@ public class H5PayDemoActivity extends Activity {
 		settings.setJavaScriptCanOpenWindowsAutomatically(true);
 		settings.setMinimumFontSize(settings.getMinimumFontSize() + 8);
 		settings.setAllowFileAccess(false);
-		settings.setTextSize(WebSettings.TextSize.NORMAL);
 		mWebView.setVerticalScrollbarOverlay(true);
 		mWebView.setWebViewClient(new MyWebViewClient());
 		mWebView.loadUrl(url);

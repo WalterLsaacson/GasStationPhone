@@ -84,10 +84,10 @@ public class MyStationsAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				Const.showToast(context, "出发去"
 						+ stations.get(position).station_name);
-				// context.startNavi(
-				// Double.parseDouble(stations.get(position).latitude_num),
-				// Double.parseDouble(stations.get(position).longitude_num),
-				// stations.get(position).station_name);
+				context.startNavi(
+						Double.parseDouble(stations.get(position).latitude_num),
+						Double.parseDouble(stations.get(position).longitude_num),
+						stations.get(position).station_name);
 			}
 		});
 		return convertView;

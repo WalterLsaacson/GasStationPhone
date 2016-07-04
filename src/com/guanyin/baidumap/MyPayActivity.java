@@ -86,6 +86,7 @@ public class MyPayActivity extends Activity implements OnClickListener {
 
 		money = new ArrayList<String>();
 		money.add("20");
+		money.add("0.01");
 		money.add("100");
 		money.add("200");
 		money.add("500");
@@ -93,6 +94,14 @@ public class MyPayActivity extends Activity implements OnClickListener {
 		pay_type = new ArrayList<String>();
 		pay_type.add("支付宝");
 		pay_type.add("微信");
+
+	}
+
+	private String calculDistance(String lati, String lon) {
+		double latidouble = Double.parseDouble(lati);
+		double londouble = Double.parseDouble(lati);
+		return Const.GetDistance(app.latitude, app.lontitude, latidouble,
+				londouble) + "m";
 
 	}
 
@@ -105,7 +114,8 @@ public class MyPayActivity extends Activity implements OnClickListener {
 		tv_stationName.setText(station.station_name);
 
 		tv_stationDistance = (TextView) findViewById(R.id.tv_pay_distance);
-		// tv_stationDistance.setText(station.calculDistance() + "m");
+		tv_stationDistance.setText(calculDistance(station.latitude_num,
+				station.longitude_num));
 
 		iv_money = (ImageView) findViewById(R.id.iv_money);
 		iv_money.setOnClickListener(this);

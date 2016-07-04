@@ -1,10 +1,19 @@
 package com.guanyin.baidumap;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -12,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -30,6 +40,13 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.navisdk.adapter.BNOuterLogUtil;
+import com.baidu.navisdk.adapter.BNRoutePlanNode;
+import com.baidu.navisdk.adapter.BNRoutePlanNode.CoordinateType;
+import com.baidu.navisdk.adapter.BNaviSettingManager;
+import com.baidu.navisdk.adapter.BaiduNaviManager;
+import com.baidu.navisdk.adapter.BaiduNaviManager.NaviInitListener;
+import com.baidu.navisdk.adapter.BaiduNaviManager.RoutePlanListener;
 import com.guanyin.activity.R;
 import com.guanyin.data.StationInfo;
 import com.guanyin.userface.ViewPagerActivity;
@@ -62,6 +79,10 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 	private BitmapDescriptor bitmapDescriptor12;
 
 	// 导航
+	private String mSDCardPath = null;
+	private static final String APP_FOLDER_NAME = "demo";
+	public static final String ROUTE_PLAN_NODE = "routePlanNode";
+	public static List<Activity> activityList = new LinkedList<Activity>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +101,13 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 		// 设置marker的点击事件
 		setClickMap();
 		setMarkers();
+
+		activityList.add(this);
+		BNOuterLogUtil.setLogSwitcher(true);
+
+		if (initDirs()) {
+			initNavi();
+		}
 
 	}
 
@@ -387,6 +415,178 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 		super.onDestroy();
 		// 在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
 		mMapView.onDestroy();
+	}
+
+	/**
+	 * 启动导航，默认路线规划规则（推荐模式：NE_RoutePlan_Mode.ROUTE_PLAN_MOD_RECOMMEND），供外部调用一键导航
+	 * 
+	 * @param desLat
+	 *            目的地纬度
+	 * @param desLon
+	 *            目的地经度
+	 * @param destName
+	 *            目的地名称
+	 */
+	public void startNavi(final double desLat, final double desLon,
+			final String destName) {
+		if (BaiduNaviManager.isNaviInited()) {
+			routeplanToNavi(CoordinateType.BD09LL, desLat, desLon, destName);
+		}
+	}
+
+	private boolean initDirs() {
+		mSDCardPath = getSdcardDir();
+		if (mSDCardPath == null) {
+			return false;
+		}
+		File f = new File(mSDCardPath, APP_FOLDER_NAME);
+		if (!f.exists()) {
+			try {
+				f.mkdir();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return true;
+	}
+
+	String authinfo = null;
+
+	/**
+	 * 内部TTS播报状态回传handler
+	 */
+	private static Handler ttsHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			int type = msg.what;
+			switch (type) {
+			case BaiduNaviManager.TTSPlayMsgType.PLAY_START_MSG: {
+				break;
+			}
+			case BaiduNaviManager.TTSPlayMsgType.PLAY_END_MSG: {
+				break;
+			}
+			default:
+				break;
+			}
+		}
+	};
+
+	private void initNavi() {
+
+		BaiduNaviManager.getInstance().init(this, mSDCardPath, APP_FOLDER_NAME,
+				new NaviInitListener() {
+					@Override
+					public void onAuthResult(int status, String msg) {
+						if (0 == status) {
+							authinfo = "key校验成功!";
+						} else {
+							authinfo = "key校验失败, " + msg;
+						}
+						if (Const.debug) {
+							Log.e("百度导航初始化", authinfo);
+						}
+					}
+
+					public void initSuccess() {
+						if (Const.debug) {
+							Log.e("百度导航初始化", "百度导航引擎初始化成功");
+						}
+						initSetting();
+					}
+
+					public void initStart() {
+						if (Const.debug) {
+							Log.e("百度导航初始化", "百度导航引擎初始化开始");
+						}
+					}
+
+					public void initFailed() {
+						if (Const.debug) {
+							Log.e("百度导航初始化", "百度导航引擎初始化失败");
+						}
+					}
+
+				}, null, ttsHandler, null);
+
+	}
+
+	private String getSdcardDir() {
+		if (Environment.getExternalStorageState().equalsIgnoreCase(
+				Environment.MEDIA_MOUNTED)) {
+			return Environment.getExternalStorageDirectory().toString();
+		}
+		return null;
+	}
+
+	private void routeplanToNavi(CoordinateType coType, final double desLat,
+			final double desLon, final String destName) {
+		BNRoutePlanNode sNode = null;
+		BNRoutePlanNode eNode = null;
+		sNode = new BNRoutePlanNode(app.lontitude, app.latitude, app.address,
+				null, coType);
+		eNode = new BNRoutePlanNode(desLon, desLat, destName, null, coType);
+		if (sNode != null && eNode != null) {
+			List<BNRoutePlanNode> list = new ArrayList<BNRoutePlanNode>();
+			list.add(sNode);
+			list.add(eNode);
+			BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true,
+					new DemoRoutePlanListener(sNode));
+		}
+	}
+
+	public class DemoRoutePlanListener implements RoutePlanListener {
+
+		private BNRoutePlanNode mBNRoutePlanNode = null;
+
+		public DemoRoutePlanListener(BNRoutePlanNode node) {
+			mBNRoutePlanNode = node;
+		}
+
+		@Override
+		public void onJumpToNavigator() {
+			/*
+			 * 设置途径点以及resetEndNode会回调该接口
+			 */
+
+			for (Activity ac : activityList) {
+
+				if (ac.getClass().getName().endsWith("BNDemoGuideActivity")) {
+
+					return;
+				}
+			}
+			Intent intent = new Intent(context, NaviGuideActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putSerializable(ROUTE_PLAN_NODE,
+					(BNRoutePlanNode) mBNRoutePlanNode);
+			intent.putExtras(bundle);
+			startActivity(intent);
+
+		}
+
+		@Override
+		public void onRoutePlanFailed() {
+			Toast.makeText(context, "算路失败", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	private void initSetting() {
+		BNaviSettingManager
+				.setDayNightMode(BNaviSettingManager.DayNightMode.DAY_NIGHT_MODE_DAY);
+		BNaviSettingManager
+				.setShowTotalRoadConditionBar(BNaviSettingManager.PreViewRoadCondition.ROAD_CONDITION_BAR_SHOW_ON);
+		BNaviSettingManager.setVoiceMode(BNaviSettingManager.VoiceMode.Veteran);
+		BNaviSettingManager
+				.setPowerSaveMode(BNaviSettingManager.PowerSaveMode.DISABLE_MODE);
+		BNaviSettingManager
+				.setRealRoadCondition(BNaviSettingManager.RealRoadCondition.NAVI_ITS_ON);
+	}
+
+	// 防止事件导致多次加载onCreate方法
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
 	}
 
 }

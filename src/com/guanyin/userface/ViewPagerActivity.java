@@ -252,7 +252,7 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 										.getString("succeed").equals("1")) {
 									Const.log(TAG, "获取到加油站信息！");
 									if (jsonresponse.getJSONObject("data")
-											.getString("list").equals("0")) {
+											.getString("list").equals("1")) {
 										stations.clear();
 										Const.log(TAG, "转向地图");
 										Const.showToast(context,
@@ -293,7 +293,7 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 										JSONObject stationsObject = jsonresponse
 												.getJSONObject("data")
 												.getJSONArray("stations")
-												.getJSONObject(1);
+												.getJSONObject(0);
 										StationInfo siInfo = new StationInfo();
 										siInfo.station_id = stationsObject
 												.getString("station_id");
@@ -363,7 +363,6 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 						} else {
 							Const.showToast(context, "服务器异常请重试...");
 						}
-
 					}
 
 					@Override

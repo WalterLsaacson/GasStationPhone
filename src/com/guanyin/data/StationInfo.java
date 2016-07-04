@@ -15,6 +15,8 @@ public class StationInfo {
 	public String longitude_num;
 	public String is_cooperate = "0";
 
+	public double distance;
+
 	public ArrayList<Gas> gasList;
 
 	public boolean isSelected = false;
