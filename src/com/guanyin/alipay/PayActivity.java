@@ -10,7 +10,6 @@ import java.util.Random;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -98,7 +97,7 @@ public class PayActivity extends FragmentActivity {
 		money = app.sp.getString("money", null);
 		tv_name = (TextView) findViewById(R.id.product_subject);
 		tv_price = (TextView) findViewById(R.id.product_price);
-		tv_name.setText(oilType);
+		tv_name.setText(oilType + "号油");
 		tv_price.setText(money + "元");
 	}
 
@@ -125,7 +124,7 @@ public class PayActivity extends FragmentActivity {
 		// "价格：" + app.sp.getString("oil_price", null),
 		// app.sp.getString("money", null));
 
-		String orderInfo = getOrderInfo("油品：" + oilType, "该商品的详细描述", money);
+		String orderInfo = getOrderInfo(oilType + "号油", "该商品的详细描述", money);
 
 		/**
 		 * 特别注意，这里的签名逻辑需要放在服务端，切勿将私钥泄露在代码中！
@@ -175,26 +174,6 @@ public class PayActivity extends FragmentActivity {
 		PayTask payTask = new PayTask(this);
 		String version = payTask.getVersion();
 		Toast.makeText(this, version, Toast.LENGTH_SHORT).show();
-	}
-
-	/**
-	 * 原生的H5（手机网页版支付切natvie支付） 【对应页面网页支付按钮】
-	 * 
-	 * @param v
-	 */
-	public void h5Pay(View v) {
-		Intent intent = new Intent(this, H5PayDemoActivity.class);
-		Bundle extras = new Bundle();
-		/**
-		 * url是测试的网站，在app内部打开页面是基于webview打开的，demo中的webview是H5PayDemoActivity，
-		 * demo中拦截url进行支付的逻辑是在H5PayDemoActivity中shouldOverrideUrlLoading方法实现，
-		 * 商户可以根据自己的需求来实现
-		 */
-		String url = "http://m.taobao.com";
-		// url可以是一号店或者淘宝等第三方的购物wap站点，在该网站的支付过程中，支付宝sdk完成拦截支付
-		extras.putString("url", url);
-		intent.putExtras(extras);
-		startActivity(intent);
 	}
 
 	/**

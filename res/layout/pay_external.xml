@@ -85,17 +85,6 @@
                 android:text="@string/pay"
                 android:textColor="@color/white"
                 tools:ignore="HardcodedText" />
-
-            <Button
-                android:id="@+id/h5pay"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@color/pay"
-                android:onClick="h5Pay"
-                android:text="@string/webpay"
-                android:textColor="@color/white"
-                tools:ignore="HardcodedText" />
         </LinearLayout>
     </LinearLayout>
 

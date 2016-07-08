@@ -32,10 +32,10 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.guanyin.activity.R;
-import com.guanyin.baidumap.BaiduMapActivity;
-import com.guanyin.baidumap.LicenseOilgunActivity;
 import com.guanyin.data.Gas;
 import com.guanyin.data.StationInfo;
+import com.guanyin.mappay.BaiduMapActivity;
+import com.guanyin.mappay.LicenseOilgunActivity;
 import com.guanyin.utils.Const;
 import com.guanyin.utils.MyApplication;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -64,6 +64,7 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 
 	// 设置跳转到加油界面
 	private ImageView iv_oil;
+	private ImageView iv_poi;
 	private TextView tv_logout;
 
 	// 获取加油站
@@ -132,6 +133,9 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 		// 设置加油的点击事件
 		iv_oil = (ImageView) view0.findViewById(R.id.iv_oil);
 		iv_oil.setOnClickListener(this);
+
+		iv_poi = (ImageView) view0.findViewById(R.id.iv_poi);
+		iv_poi.setOnClickListener(this);
 
 		tv_logout = (TextView) view0.findViewById(R.id.tv_logout);
 		tv_logout.setOnClickListener(this);
@@ -224,7 +228,7 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 		JSONObject jsonText = new JSONObject();
 		try {
 			jsonText.put("mobile", app.sp.getString("mobile", ""))
-					.put("lon", app.lontitude).put("lat", app.latitude);
+			 .put("lon", app.lontitude + 0.01).put("lat", app.latitude);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

@@ -68,5 +68,7 @@
     <string name="pay">支付</string>
     <string name="webpay">网页支付转native</string>
     <string name="defultproduct">测试的商品</string>
+    <string name="title_activity_poi_map">PoiMapActivity</string>
+    <string name="searchoorenteraddress">搜索或输入网址</string>
 
 </resources>

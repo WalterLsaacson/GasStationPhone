@@ -117,20 +117,20 @@
             android:name="com.guanyin.userface.ForgetpwdActivity"
             android:label="@string/title_activity_forgetpwd" >
         </activity>
-        <activity android:name="com.guanyin.baidumap.LicenseOilgunActivity" >
+        <activity android:name="com.guanyin.mappay.LicenseOilgunActivity" >
         </activity>
-        <activity android:name="com.guanyin.baidumap.MyPayActivity" >
+        <activity android:name="com.guanyin.mappay.MyPayActivity" >
         </activity>
         <activity android:name="com.guanyin.alipay.PayActivity" >
         </activity>
         <activity android:name="com.guanyin.alipay.H5PayDemoActivity" >
         </activity>
         <activity
-            android:name="com.guanyin.baidumap.BaiduMapActivity"
+            android:name="com.guanyin.mappay.BaiduMapActivity"
             android:label="@string/title_activity_baidu_map" >
         </activity>
         <activity
-            android:name="com.guanyin.baidumap.AlertActivity"
+            android:name="com.guanyin.mappay.AlertActivity"
             android:label="@string/title_activity_alert"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
@@ -141,6 +141,10 @@
         <activity
             android:name="com.baidu.navi.sdkdemo.BNDemoGuideActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden" >
+        </activity>
+        <activity
+            android:name="com.guanyin.poi.PoiMapActivity"
+            android:label="@string/title_activity_poi_map" >
         </activity>
     </application>
 

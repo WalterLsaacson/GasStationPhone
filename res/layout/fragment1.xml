@@ -22,6 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/green"
+                android:contentDescription="@string/_100"
                 android:src="@drawable/selector_car_manager" />
 
             <TextView
@@ -196,13 +197,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/selector_charge"
+            android:contentDescription="@string/_100"
             android:padding="15dp" />
 
         <ImageView
+            android:id="@+id/iv_poi"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/new_activity_map"
+            android:contentDescription="@string/_100"
             android:padding="15dp" />
 
         <ImageView
@@ -210,6 +214,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/new_activity_look_car1"
+            android:contentDescription="@string/_100"
             android:padding="15dp" />
     </LinearLayout>
 

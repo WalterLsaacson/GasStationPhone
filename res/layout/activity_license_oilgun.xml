@@ -15,7 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/selector_back" />
+            android:background="@drawable/selector_back"
+            android:contentDescription="@string/_" />
 
         <TextView
             android:layout_width="0dp"
@@ -54,7 +55,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="5dp"
-            android:background="@drawable/oil_icon" />
+            android:background="@drawable/oil_icon"
+            android:contentDescription="@string/_" />
 
         <TextView
             android:id="@+id/tvStationName"
@@ -113,6 +115,7 @@
             android:layout_height="30dp"
             android:layout_margin="10dp"
             android:background="@drawable/selector_pop"
+            android:contentDescription="@string/_"
             android:scaleType="center" />
     </LinearLayout>
 
@@ -150,6 +153,7 @@
             android:layout_height="30dp"
             android:layout_margin="10dp"
             android:background="@drawable/selector_pop"
+            android:contentDescription="@string/_"
             android:scaleType="center" />
     </LinearLayout>
 
