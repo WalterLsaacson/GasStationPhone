@@ -135,11 +135,11 @@
             android:theme="@android:style/Theme.Dialog" >
         </activity>
         <activity
-            android:name="com.baidu.navi.sdkdemo.BNDemoMainActivity"
+            android:name="com.guanyin.mappay.NaviMainActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden" >
         </activity>
         <activity
-            android:name="com.baidu.navi.sdkdemo.BNDemoGuideActivity"
+            android:name="com.guanyin.mappay.NaviGuideActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden" >
         </activity>
         <activity

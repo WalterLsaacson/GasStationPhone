@@ -29,7 +29,7 @@ public class Const {
 	public static final String apiRouteReset = "member/member/resetPassword";
 	public static final String apiGetStation = "station/station/getstation";
 
-	private static double EARTH_RADIUS = 6378137.0;
+	private static double EARTH_RADIUS = 6378.137;
 
 	public static final void showToast(Context context, String contents) {
 		if (debug) {

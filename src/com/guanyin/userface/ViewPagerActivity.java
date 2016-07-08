@@ -256,7 +256,7 @@ public class ViewPagerActivity extends Activity implements OnClickListener {
 										.getString("succeed").equals("1")) {
 									Const.log(TAG, "获取到加油站信息！");
 									if (jsonresponse.getJSONObject("data")
-											.getString("list").equals("1")) {
+											.getString("list").equals("0")) {
 										stations.clear();
 										Const.log(TAG, "转向地图");
 										Const.showToast(context,

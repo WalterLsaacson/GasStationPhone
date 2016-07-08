@@ -8,7 +8,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -41,6 +40,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.navisdk.adapter.BNOuterLogUtil;
+import com.baidu.navisdk.adapter.BNOuterTTSPlayerCallback;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.baidu.navisdk.adapter.BNRoutePlanNode.CoordinateType;
 import com.baidu.navisdk.adapter.BNaviSettingManager;
@@ -79,10 +79,15 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 	private BitmapDescriptor bitmapDescriptor12;
 
 	// 导航
-	private String mSDCardPath = null;
-	private static final String APP_FOLDER_NAME = "demo";
-	public static final String ROUTE_PLAN_NODE = "routePlanNode";
 	public static List<Activity> activityList = new LinkedList<Activity>();
+
+	private static final String APP_FOLDER_NAME = "Navi";
+
+	private String mSDCardPath = null;
+	public static final String ROUTE_PLAN_NODE = "routePlanNode";
+	public static final String SHOW_CUSTOM_ITEM = "showCustomItem";
+	public static final String RESET_END_NODE = "resetEndNode";
+	public static final String VOID_MODE = "voidMode";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +108,7 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 		setMarkers();
 
 		activityList.add(this);
+
 		BNOuterLogUtil.setLogSwitcher(true);
 
 		if (initDirs()) {
@@ -456,14 +462,16 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 	/**
 	 * 内部TTS播报状态回传handler
 	 */
-	private static Handler ttsHandler = new Handler() {
+	private Handler ttsHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			int type = msg.what;
 			switch (type) {
 			case BaiduNaviManager.TTSPlayMsgType.PLAY_START_MSG: {
+				showToastMsg("Handler : TTS play start");
 				break;
 			}
 			case BaiduNaviManager.TTSPlayMsgType.PLAY_END_MSG: {
+				showToastMsg("Handler : TTS play end");
 				break;
 			}
 			default:
@@ -472,7 +480,38 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 		}
 	};
 
+	/**
+	 * 内部TTS播报状态回调接口
+	 */
+	private BaiduNaviManager.TTSPlayStateListener ttsPlayStateListener = new BaiduNaviManager.TTSPlayStateListener() {
+
+		@Override
+		public void playEnd() {
+			// showToastMsg("TTSPlayStateListener : TTS play end");
+		}
+
+		@Override
+		public void playStart() {
+			// showToastMsg("TTSPlayStateListener : TTS play start");
+		}
+	};
+
+	// 重写showToast方法
+	public void showToastMsg(final String msg) {
+		BaiduMapActivity.this.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				Toast.makeText(BaiduMapActivity.this, msg, Toast.LENGTH_SHORT)
+						.show();
+			}
+		});
+	}
+
+	// 初始化语音导航
 	private void initNavi() {
+
+		BNOuterTTSPlayerCallback ttsCallback = null;
 
 		BaiduNaviManager.getInstance().init(this, mSDCardPath, APP_FOLDER_NAME,
 				new NaviInitListener() {
@@ -483,28 +522,30 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 						} else {
 							authinfo = "key校验失败, " + msg;
 						}
-						if (Const.debug) {
-							Log.e("百度导航初始化", authinfo);
-						}
+						BaiduMapActivity.this.runOnUiThread(new Runnable() {
+
+							@Override
+							public void run() {
+								Toast.makeText(BaiduMapActivity.this, authinfo,
+										Toast.LENGTH_LONG).show();
+							}
+						});
 					}
 
 					public void initSuccess() {
-						if (Const.debug) {
-							Log.e("百度导航初始化", "百度导航引擎初始化成功");
-						}
+						Toast.makeText(BaiduMapActivity.this, "百度导航引擎初始化成功",
+								Toast.LENGTH_SHORT).show();
 						initSetting();
 					}
 
 					public void initStart() {
-						if (Const.debug) {
-							Log.e("百度导航初始化", "百度导航引擎初始化开始");
-						}
+						Toast.makeText(BaiduMapActivity.this, "百度导航引擎初始化开始",
+								Toast.LENGTH_SHORT).show();
 					}
 
 					public void initFailed() {
-						if (Const.debug) {
-							Log.e("百度导航初始化", "百度导航引擎初始化失败");
-						}
+						Toast.makeText(BaiduMapActivity.this, "百度导航引擎初始化失败",
+								Toast.LENGTH_SHORT).show();
 					}
 
 				}, null, ttsHandler, null);
@@ -519,10 +560,11 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 		return null;
 	}
 
-	private void routeplanToNavi(CoordinateType coType, final double desLat,
-			final double desLon, final String destName) {
+	private void routeplanToNavi(CoordinateType coType, double desLat,
+			double desLon, String destName) {
 		BNRoutePlanNode sNode = null;
 		BNRoutePlanNode eNode = null;
+
 		sNode = new BNRoutePlanNode(app.lontitude, app.latitude, app.address,
 				null, coType);
 		eNode = new BNRoutePlanNode(desLon, desLat, destName, null, coType);
@@ -556,7 +598,8 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 					return;
 				}
 			}
-			Intent intent = new Intent(context, NaviGuideActivity.class);
+			Intent intent = new Intent(BaiduMapActivity.this,
+					NaviGuideActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putSerializable(ROUTE_PLAN_NODE,
 					(BNRoutePlanNode) mBNRoutePlanNode);
@@ -567,7 +610,9 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void onRoutePlanFailed() {
-			Toast.makeText(context, "算路失败", Toast.LENGTH_SHORT).show();
+			// TODO Auto-generated method stub
+			Toast.makeText(BaiduMapActivity.this, "算路失败", Toast.LENGTH_SHORT)
+					.show();
 		}
 	}
 
@@ -583,10 +628,63 @@ public class BaiduMapActivity extends Activity implements OnClickListener {
 				.setRealRoadCondition(BNaviSettingManager.RealRoadCondition.NAVI_ITS_ON);
 	}
 
-	// 防止事件导致多次加载onCreate方法
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-	}
+	private BNOuterTTSPlayerCallback mTTSCallback = new BNOuterTTSPlayerCallback() {
 
+		@Override
+		public void stopTTS() {
+			// TODO Auto-generated method stub
+			Log.e("test_TTS", "stopTTS");
+		}
+
+		@Override
+		public void resumeTTS() {
+			// TODO Auto-generated method stub
+			Log.e("test_TTS", "resumeTTS");
+		}
+
+		@Override
+		public void releaseTTSPlayer() {
+			// TODO Auto-generated method stub
+			Log.e("test_TTS", "releaseTTSPlayer");
+		}
+
+		@Override
+		public int playTTSText(String speech, int bPreempt) {
+			// TODO Auto-generated method stub
+			Log.e("test_TTS", "playTTSText" + "_" + speech + "_" + bPreempt);
+
+			return 1;
+		}
+
+		@Override
+		public void phoneHangUp() {
+			// TODO Auto-generated method stub
+			Log.e("test_TTS", "phoneHangUp");
+		}
+
+		@Override
+		public void phoneCalling() {
+			// TODO Auto-generated method stub
+			Log.e("test_TTS", "phoneCalling");
+		}
+
+		@Override
+		public void pauseTTS() {
+			// TODO Auto-generated method stub
+			Log.e("test_TTS", "pauseTTS");
+		}
+
+		@Override
+		public void initTTSPlayer() {
+			// TODO Auto-generated method stub
+			Log.e("test_TTS", "initTTSPlayer");
+		}
+
+		@Override
+		public int getTTSState() {
+			// TODO Auto-generated method stub
+			Log.e("test_TTS", "getTTSState");
+			return 1;
+		}
+	};
 }

@@ -10,17 +10,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 
 import com.baidu.navisdk.adapter.BNRouteGuideManager;
 import com.baidu.navisdk.adapter.BNRouteGuideManager.CustomizedLayerItem;
 import com.baidu.navisdk.adapter.BNRouteGuideManager.OnNavigationListener;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
+import com.baidu.navisdk.adapter.BNRoutePlanNode.CoordinateType;
 import com.baidu.navisdk.adapter.BNaviBaseCallbackModel;
 import com.baidu.navisdk.adapter.BaiduNaviCommonModule;
 import com.baidu.navisdk.adapter.NaviModuleFactory;
 import com.baidu.navisdk.adapter.NaviModuleImpl;
 import com.guanyin.activity.R;
-import com.guanyin.utils.Const;
 
 /**
  * 诱导界面
@@ -42,6 +43,7 @@ public class NaviGuideActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 
 		BaiduMapActivity.activityList.add(this);
@@ -195,6 +197,9 @@ public class NaviGuideActivity extends Activity {
 						BNRouteGuideManager.getInstance().showCustomizedLayer(
 								false);
 					} else if (msg.what == MSG_RESET_NODE) {
+						BNRouteGuideManager.getInstance().resetEndNodeInNavi(
+								new BNRoutePlanNode(116.21142, 40.85087,
+										"百度大厦11", null, CoordinateType.GCJ02));
 					}
 				};
 			};
@@ -213,13 +218,12 @@ public class NaviGuideActivity extends Activity {
 				Object obj) {
 
 			if (actionType == 0) {
-				if (Const.debug)
-					Log.e(TAG, "notifyOtherAction actionType = " + actionType
-							+ ",导航到达目的地！");
+				Log.i(TAG, "notifyOtherAction actionType = " + actionType
+						+ ",导航到达目的地！");
 			}
-			if (Const.debug)
-				Log.e(TAG, "actionType:" + actionType + "arg1:" + arg1
-						+ "arg2:" + arg2 + "obj:" + obj.toString());
+
+			Log.i(TAG, "actionType:" + actionType + "arg1:" + arg1 + "arg2:"
+					+ arg2 + "obj:" + obj.toString());
 		}
 
 	};

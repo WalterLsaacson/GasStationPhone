@@ -143,7 +143,7 @@ public final class R {
         public static final int weather_more=0x7f020062;
     }
     public static final class id {
-        public static final int action_settings=0x7f090052;
+        public static final int action_settings=0x7f090053;
         public static final int back1=0x7f090020;
         public static final int bmapView=0x7f090001;
         public static final int btn_catch_station=0x7f090003;
@@ -226,6 +226,7 @@ public final class R {
         public static final int wear_tv=0x7f090040;
         public static final int weather_air_tv=0x7f09003b;
         public static final int weather_status_tv=0x7f09003a;
+        public static final int wgsNaviBtn=0x7f090052;
     }
     public static final class layout {
         public static final int activity_baidu_map=0x7f030000;
@@ -245,6 +246,7 @@ public final class R {
         public static final int pay_external=0x7f03000e;
         public static final int pay_main=0x7f03000f;
         public static final int pop_window_oilgun=0x7f030010;
+        public static final int startnavi=0x7f030011;
     }
     public static final class menu {
         public static final int alert=0x7f080000;
